@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Impresión 3D - Rashid Studio Edition</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para íconos premium -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #090a0f;
+        }
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f111a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2233;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen pb-12 antialiased">
+
+    <!-- Encabezado / Branding -->
+    <header class="border-b border-zinc-800/80 bg-zinc-950/40 backdrop-blur-md sticky top-0 z-30 px-4 py-4">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-orange-500 to-amber-500 p-2.5 rounded-xl shadow-lg shadow-orange-500/20">
+                    <i class="fa-solid fa-cube text-xl text-white animate-pulse"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-400 bg-clip-text text-transparent">
+                        Rashid 3D Studio
+                    </h1>
+                    <p class="text-[10px] text-zinc-400 font-medium">Calculadora de Presupuestos v2.0</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full font-bold flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Activo
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- COLUMNA IZQUIERDA: INPUTS Y AJUSTES -->
+        <section class="lg:col-span-7 space-y-6">
+            
+            <!-- PANEL 1: DATOS DEL SLICER (Entrada de Datos) -->
+            <div class="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-5 shadow-xl backdrop-blur-sm">
+                <div class="flex items-center gap-2.5 mb-4 text-orange-400">
+                    <i class="fa-solid fa-sliders text-lg"></i>
+                    <h2 class="font-bold text-sm tracking-wide uppercase">1. Parámetros de la Pieza (Slicer)</h2>
+                </div>
+                
+                <div class="space-y-4">
+                    <!-- Nombre del Proyecto -->
+                    <div>
+                        <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Nombre de la Pieza o Combo:</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-zinc-500">
+                                <i class="fa-solid fa-signature text-xs"></i>
+                            </span>
+                            <input type="text" id="nombreProyecto" value="Combo 3 Marca Páginas Gatos" 
+                                class="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl pl-9 pr-3 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 transition">
+                        </div>
+                    </div>
+
+                    <!-- Fila de Peso y Material -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Peso del Modelo (Laminador):</label>
+                            <div class="relative">
+                                <input type="number" step="0.01" id="pesoModelo" value="9.67" 
+                                    class="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl px-3 py-2.5 text-sm text-white font-bold focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 transition text-right pr-8">
+                                <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500 text-xs font-semibold">g</span>
+                            </div>
+                            <p class="text-[10px] text-zinc-500 mt-1">Suma el peso de soportes y faldas.</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Material Utilizado:</label>
+                            <select id="tipoMaterial" class="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 transition">
+                                <option value="PLA" selected>PLA Premium</option>
+                                <option value="PETG">PETG Alta Resistencia</option>
+                                <option value="ABS">ABS Técnico</option>
+                                <option value="Resina">Resina UV Standard</option>
+                            </select>
+                            <p class="text-[10px] text-zinc-500 mt-1">Filamento base cargado en ajustes.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tiempos de Impresión -->
+                    <div class="grid grid-cols-2 gap-4 bg-zinc-950/30 p-3.5 rounded-xl border border-zinc-800/50">
+                        <div class="col-span-2">
+                            <span class="text-[11px] font-bold text-zinc-500 uppercase tracking-wider">Tiempo de Impresión en Máquina:</span>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-zinc-400 mb-1">Horas:</label>
+                            <div class="relative">
+                                <input type="number" id="tiempoHoras" value="1" 
+                                    class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-white text-center font-bold focus:ring-1 focus:ring-orange-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-zinc-400 mb-1">Minutos:</label>
+                            <div class="relative">
+                                <input type="number" id="tiempoMinutos" value="27" 
+                                    class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-white text-center font-bold focus:ring-1 focus:ring-orange-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tiempos de Preparación Manual -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Diseño y Slicing (Horas):</label>
+                            <input type="number" step="0.05" id="tiempoDiseno" value="0.15" 
+                                class="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-orange-500 transition text-right">
+                            <p class="text-[10px] text-zinc-500 mt-1">0.15 = 9 minutos de PC.</p>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Limpieza y Post-pro (Horas):</label>
+                            <input type="number" step="0.05" id="tiempoPost" value="0.05" 
+                                class="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-orange-500 transition text-right">
+                            <p class="text-[10px] text-zinc-500 mt-1">0.05 = 3 minutos quitando rebabas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 2: CONFIGURACIÓN GLOBAL (Desplegable/Colapsable) -->
+            <div class="bg-zinc-900/60 border border-zinc-800 rounded-2xl shadow-xl overflow-hidden">
+                <button onclick="toggleAjustes()" class="w-full px-5 py-4 flex justify-between items-center text-zinc-300 hover:text-white transition focus:outline-none">
+                    <span class="font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-gears text-zinc-500"></i> Ajustes de Costos Globales
+                    </span>
+                    <i id="ajustesIcon" class="fa-solid fa-chevron-down text-xs transition-transform duration-300"></i>
+                </button>
+                
+                <div id="ajustesBody" class="hidden border-t border-zinc-800/50 bg-zinc-950/40 p-5 space-y-4">
+                    <p class="text-xs text-zinc-400 leading-relaxed">
+                        Modifica los valores base de tus máquinas, materiales y tarifas de energía. Estos datos se usan de base para tus fórmulas de rentabilidad en Venezuela.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Costo de filamento -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Costo de Filamento con Envío (Kg):</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-zinc-500 text-xs">$</span>
+                                <input type="number" id="cfgFilamento" value="23.00" 
+                                    class="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-6 pr-3 py-2 text-xs text-white focus:ring-1 focus:ring-orange-500 text-right">
+                            </div>
+                        </div>
+
+                        <!-- Costo de Máquina -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Costo de la Impresora:</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-zinc-500 text-xs">$</span>
+                                <input type="number" id="cfgMaquina" value="640.00" 
+                                    class="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-6 pr-3 py-2 text-xs text-white focus:ring-1 focus:ring-orange-500 text-right">
+                            </div>
+                        </div>
+
+                        <!-- Vida útil -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Vida útil de la máquina (Horas):</label>
+                            <input type="number" id="cfgVidaUtil" value="5000" 
+                                class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:ring-1 focus:ring-orange-500 text-right">
+                        </div>
+
+                        <!-- Consumo Eléctrico -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Consumo Eléctrico (kW):</label>
+                            <input type="number" step="0.01" id="cfgConsumo" value="0.15" 
+                                class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:ring-1 focus:ring-orange-500 text-right">
+                        </div>
+
+                        <!-- Tarifa Eléctrica -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Tarifa de Luz ($/kWh):</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-zinc-500 text-xs">$</span>
+                                <input type="number" step="0.01" id="cfgTarifaLuz" value="0.05" 
+                                    class="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-6 pr-3 py-2 text-xs text-white focus:ring-1 focus:ring-orange-500 text-right">
+                            </div>
+                        </div>
+
+                        <!-- Tu hora de trabajo -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Tu Mano de Obra ($/Hora):</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-zinc-500 text-xs">$</span>
+                                <input type="number" id="cfgManoObra" value="10.00" 
+                                    class="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-6 pr-3 py-2 text-xs text-white focus:ring-1 focus:ring-orange-500 text-right">
+                            </div>
+                        </div>
+
+                        <!-- Colchón fallas -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Colchón de Fallos y Purgas (%):</label>
+                            <div class="relative">
+                                <input type="number" id="cfgFallo" value="18" 
+                                    class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:ring-1 focus:ring-orange-500 text-right pr-6">
+                                <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-zinc-500 text-xs">%</span>
+                            </div>
+                        </div>
+
+                        <!-- IVA Venezuela -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1">IVA (Oficial Venezuela):</label>
+                            <div class="relative">
+                                <input type="number" id="cfgIva" value="16" 
+                                    class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:ring-1 focus:ring-orange-500 text-right pr-6">
+                                <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-zinc-500 text-xs">%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COLUMNA DERECHA: RESULTADOS INTERACTIVOS -->
+        <section class="lg:col-span-5 space-y-6">
+            
+            <!-- PANEL 3: RESULTADOS EN TIEMPO REAL -->
+            <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-6 shadow-xl relative overflow-hidden backdrop-blur-md">
+                <!-- Efecto visual de fondo -->
+                <div class="absolute -top-24 -right-24 w-48 h-48 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="flex justify-between items-center mb-5">
+                    <span class="text-xs text-zinc-400 font-extrabold tracking-wider uppercase">Cotización en Vivo</span>
+                    <span class="text-xs bg-orange-500/10 text-orange-400 border border-orange-500/20 px-2.5 py-0.5 rounded-full font-semibold">USD ($)</span>
+                </div>
+
+                <!-- Desglose de Costo Real Base -->
+                <div class="bg-zinc-950 border border-zinc-850 rounded-xl p-4 space-y-3 mb-6">
+                    <div class="flex justify-between text-xs text-zinc-400">
+                        <span>Plástico Consumido:</span>
+                        <span id="resPlastico" class="font-bold text-zinc-200">$0.00</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-zinc-400">
+                        <span>Luz Consumida:</span>
+                        <span id="resLuz" class="font-bold text-zinc-200">$0.00</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-zinc-400">
+                        <span>Depreciación Impresora:</span>
+                        <span id="resAmortizacion" class="font-bold text-zinc-200">$0.00</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-zinc-400 border-b border-zinc-850 pb-2.5">
+                        <span>Tu Tiempo de Trabajo:</span>
+                        <span id="resTiempo" class="font-bold text-zinc-200">$0.00</span>
+                    </div>
+                    
+                    <!-- Costo total de producción -->
+                    <div class="flex justify-between items-center pt-1">
+                        <div>
+                            <p class="text-xs font-bold text-yellow-500/90">Costo Base Real:</p>
+                            <p class="text-[9px] text-zinc-500">Incluye 18% colchón de fallas</p>
+                        </div>
+                        <span id="resCostoBase" class="text-lg font-black text-yellow-500">$0.00</span>
+                    </div>
+                </div>
+
+                <!-- Estrategias de Ganancia / Precios sugeridos -->
+                <div class="space-y-3">
+                    
+                    <!-- Opción 1: Estándar -->
+                    <div class="p-3 bg-zinc-950/60 border border-zinc-850 rounded-xl flex justify-between items-center hover:border-zinc-700 transition">
+                        <div>
+                            <h3 class="text-xs font-extrabold text-zinc-200 tracking-wide uppercase">Precio Estándar (100% Margen)</h3>
+                            <p class="text-[9px] text-zinc-500">Recomendado para trabajos normales</p>
+                        </div>
+                        <div class="text-right">
+                            <span id="resEstandar" class="text-base font-bold text-zinc-100">$0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Opción 2: Premium Pueblo (EXCLUSIVIDAD) -->
+                    <div class="p-4 bg-orange-950/20 border border-orange-900/40 rounded-xl flex justify-between items-center shadow-lg shadow-orange-950/10">
+                        <div>
+                            <div class="flex items-center gap-1.5">
+                                <h3 class="text-xs font-black text-orange-400 tracking-wider uppercase">PRECIO PREMIUM PUEBLO</h3>
+                                <span class="bg-orange-500 text-zinc-950 text-[8px] font-black px-1.5 py-0.5 rounded-full">RECOMENDADO</span>
+                            </div>
+                            <p class="text-[9px] text-orange-500/80 font-semibold">Margen del 200% por exclusividad tecnológica</p>
+                        </div>
+                        <div class="text-right">
+                            <span id="resPremium" class="text-xl font-black text-orange-400">$0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Opción 3: Con IVA Oficial -->
+                    <div class="p-3 bg-zinc-950/60 border border-zinc-850 rounded-xl flex justify-between items-center opacity-75">
+                        <div>
+                            <h3 class="text-xs font-semibold text-zinc-400">Precio Comercial Facturado</h3>
+                            <p class="text-[9px] text-zinc-500">Precio Premium + 16% IVA de Ley</p>
+                        </div>
+                        <div class="text-right">
+                            <span id="resConIva" class="text-sm font-bold text-zinc-300">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="grid grid-cols-2 gap-3 mt-6">
+                    <button onclick="copiarMensaje()" class="w-full py-3 bg-zinc-800 hover:bg-zinc-750 border border-zinc-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition active:scale-95">
+                        <i class="fa-solid fa-copy"></i> Copiar Cotización
+                    </button>
+                    <button onclick="mostrarModalCotizacion()" class="w-full py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-zinc-950 font-extrabold text-xs rounded-xl flex items-center justify-center gap-2 transition shadow-lg shadow-orange-500/10 active:scale-95">
+                        <i class="fa-solid fa-receipt"></i> Ver Presupuesto
+                    </button>
+                </div>
+            </div>
+
+            <!-- PANEL 4: GRÁFICO SVG DINÁMICO (Distribución de costos) -->
+            <div class="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-5 shadow-xl">
+                <h2 class="font-bold text-xs tracking-wide uppercase text-zinc-400 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-zinc-500"></i> Distribución Real de Gastos
+                </h2>
+                
+                <div class="flex flex-col sm:flex-row items-center gap-6">
+                    <!-- Donut Chart SVG -->
+                    <div class="relative w-32 h-32 flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                            <!-- Fondo -->
+                            <path class="text-zinc-800" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <!-- Segmento Material -->
+                            <path id="svgMaterial" class="text-orange-500 transition-all duration-500" stroke-width="3" stroke-dasharray="0, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <!-- Segmento Amortizacion -->
+                            <path id="svgAmortizacion" class="text-amber-400 transition-all duration-500" stroke-width="3" stroke-dasharray="0, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <!-- Segmento Tiempo -->
+                            <path id="svgTiempo" class="text-blue-400 transition-all duration-500" stroke-width="3" stroke-dasharray="0, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <!-- Segmento Luz -->
+                            <path id="svgLuz" class="text-yellow-400 transition-all duration-500" stroke-width="3" stroke-dasharray="0, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                        <div class="absolute flex flex-col items-center justify-center text-center">
+                            <span id="centerCost" class="text-sm font-extrabold text-white">$0.00</span>
+                            <span class="text-[8px] text-zinc-500 uppercase tracking-widest">Costo Físico</span>
+                        </div>
+                    </div>
+
+                    <!-- Leyendas descriptivas -->
+                    <div class="flex-1 space-y-2">
+                        <div class="flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
+                                <span class="text-zinc-400">Filamento:</span>
+                            </div>
+                            <span id="pctMaterial" class="font-bold text-zinc-200">0%</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                                <span class="text-zinc-400">Desgaste Máquina:</span>
+                            </div>
+                            <span id="pctAmortizacion" class="font-bold text-zinc-200">0%</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
+                                <span class="text-zinc-400">Tu Tiempo:</span>
+                            </div>
+                            <span id="pctTiempo" class="font-bold text-zinc-200">0%</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+                                <span class="text-zinc-400">Luz Eléctrica:</span>
+                            </div>
+                            <span id="pctLuz" class="font-bold text-zinc-200">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- NOTIFICACIONES TOAST (No bloquean la pantalla) -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-emerald-950 border border-emerald-900 text-emerald-300 px-4 py-3.5 rounded-xl shadow-2xl flex items-center gap-2.5 transform translate-y-20 opacity-0 transition-all duration-300">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toastMessage" class="text-xs font-bold">¡Copiado con éxito!</span>
+    </div>
+
+    <!-- MODAL DE COTIZACIÓN PROFESIONAL -->
+    <div id="modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-zinc-950 border border-zinc-850 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 transform scale-95 transition-transform duration-300">
+            <div class="flex justify-between items-center border-b border-zinc-850 pb-3">
+                <h3 class="text-sm font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-file-invoice text-orange-400"></i> Presupuesto del Cliente
+                </h3>
+                <button onclick="cerrarModal()" class="text-zinc-500 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Área de Texto para Copiar -->
+            <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+                <pre id="textPresupuesto" class="text-xs text-zinc-300 whitespace-pre-wrap font-mono leading-relaxed"></pre>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="cerrarModal()" class="flex-1 py-2.5 bg-zinc-800 hover:bg-zinc-750 text-zinc-300 font-bold text-xs rounded-lg transition">
+                    Cerrar
+                </button>
+                <button onclick="copiarPresupuestoDesdeModal()" class="flex-1 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-zinc-950 font-black text-xs rounded-lg transition">
+                    Copiar para WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Escucha cambios en tiempo real en todos los campos para actualizar inmediatamente
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = ['nombreProyecto', 'pesoModelo', 'tiempoHoras', 'tiempoMinutos', 'tiempoDiseno', 'tiempoPost',
+                           'cfgFilamento', 'cfgMaquina', 'cfgVidaUtil', 'cfgConsumo', 'cfgTarifaLuz', 'cfgManoObra', 'cfgFallo', 'cfgIva'];
+            
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', recalcularTodo);
+            });
+            document.getElementById('tipoMaterial').addEventListener('change', recalcularTodo);
+            
+            recalcularTodo(); // Cálculo inicial al cargar
+        });
+
+        function toggleAjustes() {
+            const body = document.getElementById('ajustesBody');
+            const icon = document.getElementById('ajustesIcon');
+            
+            if (body.classList.contains('hidden')) {
+                body.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                body.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+
+        function recalcularTodo() {
+            // Lectura de inputs de la pieza
+            const nombre = document.getElementById('nombreProyecto').value || 'Proyecto Sin Nombre';
+            const peso = parseFloat(document.getElementById('pesoModelo').value) || 0;
+            const horas = parseFloat(document.getElementById('tiempoHoras').value) || 0;
+            const minutos = parseFloat(document.getElementById('tiempoMinutos').value) || 0;
+            const tDiseno = parseFloat(document.getElementById('tiempoDiseno').value) || 0;
+            const tPost = parseFloat(document.getElementById('tiempoPost').value) || 0;
+
+            // Lectura de Configuración Global
+            const cfgFilamento = parseFloat(document.getElementById('cfgFilamento').value) || 23;
+            const cfgMaquina = parseFloat(document.getElementById('cfgMaquina').value) || 640;
+            const cfgVidaUtil = parseFloat(document.getElementById('cfgVidaUtil').value) || 5000;
+            const cfgConsumo = parseFloat(document.getElementById('cfgConsumo').value) || 0.15;
+            const cfgTarifaLuz = parseFloat(document.getElementById('cfgTarifaLuz').value) || 0.05;
+            const cfgManoObra = parseFloat(document.getElementById('cfgManoObra').value) || 10;
+            const cfgFallo = (parseFloat(document.getElementById('cfgFallo').value) || 18) / 100;
+            const cfgIva = (parseFloat(document.getElementById('cfgIva').value) || 16) / 100;
+
+            // 1. Costo Material
+            const costoMaterial = (peso / 1000) * cfgFilamento;
+
+            // 2. Costo Luz
+            const tiempoTotalHoras = horas + (minutos / 60);
+            const costoLuz = tiempoTotalHoras * cfgConsumo * cfgTarifaLuz;
+
+            // 3. Amortización Impresora
+            const costoAmortizacion = tiempoTotalHoras * (cfgMaquina / cfgVidaUtil);
+
+            // 4. Mano de Obra
+            const costoManoObra = (tDiseno + tPost) * cfgManoObra;
+
+            // 5. Costo total de producción base (Subtotal + Colchón de Fallos)
+            const subtotal = costoMaterial + costoLuz + costoAmortizacion + costoManoObra;
+            const colchonFallos = subtotal * cfgFallo;
+            const costoBaseFinal = subtotal + colchonFallos;
+
+            // 6. Estrategia de Venta (Margen Premium Pueblo del 200%)
+            const precioEstandar = costoBaseFinal * 2.0; // 100% ganancia neta
+            const precioPremium = costoBaseFinal * 3.0;  // 200% ganancia neta (exclusividad)
+            const precioConIva = precioPremium * (1 + cfgIva);
+
+            // Pintar resultados
+            document.getElementById('resPlastico').innerText = `$${costoMaterial.toFixed(2)}`;
+            document.getElementById('resLuz').innerText = `$${costoLuz.toFixed(2)}`;
+            document.getElementById('resAmortizacion').innerText = `$${costoAmortizacion.toFixed(2)}`;
+            document.getElementById('resTiempo').innerText = `$${costoManoObra.toFixed(2)}`;
+            
+            document.getElementById('resCostoBase').innerText = `$${costoBaseFinal.toFixed(2)}`;
+            document.getElementById('centerCost').innerText = `$${costoBaseFinal.toFixed(2)}`;
+            
+            document.getElementById('resEstandar').innerText = `$${precioEstandar.toFixed(2)}`;
+            document.getElementById('resPremium').innerText = `$${precioPremium.toFixed(2)}`;
+            document.getElementById('resConIva').innerText = `$${precioConIva.toFixed(2)}`;
+
+            // Actualizar Donut Chart SVG de forma dinámica
+            actualizarGrafico(costoMaterial, costoAmortizacion, costoManoObra, costoLuz, costoBaseFinal);
+        }
+
+        function actualizarGrafico(mat, amort, mano, luz, total) {
+            if (total === 0) return;
+            
+            const pMat = (mat / total) * 100;
+            const pAmort = (amort / total) * 100;
+            const pMano = (mano / total) * 100;
+            const pLuz = (luz / total) * 100;
+
+            // Mostrar porcentajes textuales
+            document.getElementById('pctMaterial').innerText = `${pMat.toFixed(1)}%`;
+            document.getElementById('pctAmortizacion').innerText = `${pAmort.toFixed(1)}%`;
+            document.getElementById('pctTiempo').innerText = `${pMano.toFixed(1)}%`;
+            document.getElementById('pctLuz').innerText = `${pLuz.toFixed(1)}%`;
+
+            // Configurar segmentos del gráfico SVG interactivo
+            // stroke-dasharray = "longitud_segmento, espacio_total" (espacio total es 100)
+            let offset = 0;
+            
+            setSegment('svgMaterial', pMat, offset);
+            offset += pMat;
+            
+            setSegment('svgAmortizacion', pAmort, offset);
+            offset += pAmort;
+            
+            setSegment('svgTiempo', pMano, offset);
+            offset += pMano;
+            
+            setSegment('svgLuz', pLuz, offset);
+        }
+
+        function setSegment(id, percentage, offset) {
+            const el = document.getElementById(id);
+            el.setAttribute('stroke-dasharray', `${percentage} 100`);
+            el.setAttribute('stroke-dashoffset', -offset);
+        }
+
+        // Generar texto del presupuesto limpio para el cliente
+        function generarTextoPresupuesto() {
+            const nombre = document.getElementById('nombreProyecto').value;
+            const peso = parseFloat(document.getElementById('pesoModelo').value) || 0;
+            const horas = parseFloat(document.getElementById('tiempoHoras').value) || 0;
+            const minutos = parseFloat(document.getElementById('tiempoMinutos').value) || 0;
+            
+            const base = parseFloat(document.getElementById('resCostoBase').innerText.replace('$', ''));
+            const premium = parseFloat(document.getElementById('resPremium').innerText.replace('$', ''));
+
+            return `📦 PRESUPUESTO DE FABRICACIÓN DIGITAL 📦\n` +
+                   `-----------------------------------------\n` +
+                   `🔹 Proyecto: ${nombre}\n` +
+                   `🔹 Material: ${document.getElementById('tipoMaterial').value}\n` +
+                   `🔹 Peso Aprox: ${peso.toFixed(2)} g\n` +
+                   `🔹 Tiempo Estimado: ${horas}h ${minutos}m\n` +
+                   `-----------------------------------------\n` +
+                   `💰 PRECIO FINAL: $${premium.toFixed(2)} USD\n` +
+                   `-----------------------------------------\n` +
+                   `✨ Piezas impresas en polímero de alta resistencia.\n` +
+                   `✨ No incluye delivery. Cotizado en tasa oficial BCV.`;
+        }
+
+        function mostrarModalCotizacion() {
+            const texto = generarTextoPresupuesto();
+            document.getElementById('textPresupuesto').innerText = texto;
+            const modal = document.getElementById('modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.children[0].classList.remove('scale-95');
+            }, 10);
+        }
+
+        function cerrarModal() {
+            const modal = document.getElementById('modal');
+            modal.children[0].classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150);
+        }
+
+        function copiarPresupuestoDesdeModal() {
+            const texto = document.getElementById('textPresupuesto').innerText;
+            copiarTexto(texto);
+            cerrarModal();
+        }
+
+        function copiarMensaje() {
+            const texto = generarTextoPresupuesto();
+            copiarTexto(texto);
+        }
+
+        function copiarTexto(texto) {
+            // Se utiliza execCommand('copy') temporalmente debido a entornos de iframe encapsulados
+            const input = document.createElement('textarea');
+            input.value = texto;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+
+            // Mostrar el toast de éxito
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
